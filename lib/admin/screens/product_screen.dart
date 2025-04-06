@@ -27,7 +27,7 @@ class _ProductScreenState extends State<ProductScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'title'),
+                decoration: const InputDecoration(labelText: 'titl'),
               ),
             ],
           ),
