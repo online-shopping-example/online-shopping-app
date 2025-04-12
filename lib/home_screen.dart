@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('this is the home Screen'),
             const SizedBox(height: 20.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
