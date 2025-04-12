@@ -10,16 +10,16 @@ class MyRouter {
         builder: (context, state) {
           return const HomeScreen();
         },
+        routes: <RouteBase>[
+          // Admin Screen
+          GoRoute(
+            path: 'products',
+            builder: (context, state) {
+              return const ProductScreen();
+            },
+          ),
+        ],
       ),
-
-      GoRoute(
-        path: '/products',
-        builder: (context, state) {
-          return const ProductScreen();
-        },
-      ),
-
-      // Admin Screens
     ],
   );
 }
