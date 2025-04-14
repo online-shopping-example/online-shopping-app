@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:online_shopping_app/admin/screens/product_screen.dart';
+import 'package:online_shopping_app/admin/screens/add_product_screen.dart';
 import 'package:online_shopping_app/home_screen.dart';
 
 class MyRouter {
