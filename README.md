@@ -15,21 +15,21 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.#
 
-
 --- plan our Project ----
 
 client Side
-1- Screens: Intro Screen , HomeScreen , DetalisScreen for the product , logInScreen, SignInScreen, CartScreen, PaymentScreen 
-
-
-
+1- Screens: Intro Screen , HomeScreen , DetalisScreen for the product , logInScreen, SignInScreen,
+CartScreen, PaymentScreen
 
 backend_Admin_Side
 
 Intro Screen ,
-HomeScreenAdmin for Crate and Edit and Update and delete and getting all Products and specific by ID Products, 
+HomeScreenAdmin for Crate and Edit and Update and delete and getting all Products and specific by ID
+Products,
 
 inside crate ProductScreen we need 
+
+
 
 
  
