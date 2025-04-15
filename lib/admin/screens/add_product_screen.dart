@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/category_controller.dart';
+import '../../models/categories_model.dart';
+
 class ProductScreen extends StatefulWidget {
   const ProductScreen({
     super.key,
@@ -11,6 +14,15 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  late Stream<List<CategoriesModel>> _allCategoriesStream;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _allCategoriesStream = CategoryController.getAllCategoriesAsStream();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

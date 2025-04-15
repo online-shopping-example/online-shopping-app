@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:online_shopping_app/database/dp_category.dart';
-import 'package:online_shopping_app/models/category_model.dart';
+
+import '../models/categories_model.dart';
 
 class CategoryController {
   // getting specific category.
