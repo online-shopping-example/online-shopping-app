@@ -52,7 +52,7 @@ class DBCategory {
     }
   }
 
-//getting all categories from fireStore Database.
+// getting all categories from fireStore Database.
   static Future<List<QueryDocumentSnapshot>> getAllDBCategories() async {
     try {
       QuerySnapshot allCategoriesAsFuture =
@@ -66,7 +66,7 @@ class DBCategory {
     }
   }
 
-//getting all categories as stream from fireStore Database.
+// getting all categories as stream from fireStore Database.
   static Stream<QuerySnapshot> getAllDBCategoriesAsStream() {
     return categoriesCollection.orderBy('name').snapshots();
   }
