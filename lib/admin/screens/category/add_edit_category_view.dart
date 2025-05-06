@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_field/image_field.dart';
 import 'package:online_shopping_app/components/error_diaglog.dart';
 import 'package:online_shopping_app/components/primary_button_widget.dart';
 import 'package:online_shopping_app/components/primary_text_form_field_widget.dart';
 import 'package:online_shopping_app/components/warning_diaglog.dart';
+import 'package:online_shopping_app/models/categories_model.dart';
 import 'package:uiblock/uiblock.dart';
 
 import '../../../controllers/category_controller.dart';
@@ -81,15 +81,6 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
               labelText: 'Please add the category ImageUrl',
             ),
             SizedBox(height: 20.0),
-            ImageField(
-              texts: const {'first': ''},
-              files: remoteFiles != null
-                  ? remoteFiles!.map((image) {
-                      return ImageAndCaptionModel(
-                          file: image, caption: image.alt.toString());
-                    }).toList()
-                  : [],
-            ),
             const SizedBox(
               height: 20,
             ),
@@ -169,7 +160,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
           /*     imageUrl: _controllerImageUrl!.text.trim(),*/
           imageUrl: _controllerImageUrl!.text.trim(),
         );
-        await CategoryController.addCategory(newCategory);
+        await CategoryController.addCategory(newCategory as CategoriesModel);
       } else {
         CategoryModel categoryModel = widget.currentCategory!.copy(
           name: _controllerName!.text.trim(),
@@ -177,7 +168,8 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
         widget.currentCategory!.copy(
           imageUrl: imageUrl!,
         );
-        await CategoryController.updateCategory(categoryModel);
+        await CategoryController.updateCategory(
+            categoryModel as CategoriesModel);
       }
 
       if (!context.mounted) return;
@@ -219,7 +211,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
     try {
       UIBlock.block(context);
 
-      CategoryController.deleteCategory(categoryModel);
+      CategoryController.deleteCategory(categoryModel as CategoriesModel);
 
       if (!context.mounted) return;
       UIBlock.unblock(context);

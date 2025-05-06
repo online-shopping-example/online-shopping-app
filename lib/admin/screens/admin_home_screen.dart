@@ -38,14 +38,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           children: [
             ElevatedButton(
               onPressed: () {
-                context.go('/AllCategory');
+                context.go('/adminHomeScreen/allCategories');
               },
               child: const Text('All Categories Screen'),
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                context.go('/AllProducts');
+                context.go('/adminHomeScreen/allCategories/allProducts');
               },
               child: const Text('All Products Screen'),
             ),

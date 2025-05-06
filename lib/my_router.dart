@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
-import 'package:online_shopping_app/admin/screens/add_product_screen.dart';
+import 'package:online_shopping_app/admin/screens/admin_home_screen.dart';
+import 'package:online_shopping_app/admin/screens/category/all_categories_screen.dart';
+import 'package:online_shopping_app/admin/screens/products/all_products_screen.dart';
 import 'package:online_shopping_app/home_screen.dart';
 
 class MyRouter {
@@ -13,10 +15,28 @@ class MyRouter {
         routes: <RouteBase>[
           // Admin Screen
           GoRoute(
-            path: 'products',
+            path: 'adminHomeScreen',
             builder: (context, state) {
-              return const ProductScreen();
+              return const AdminHomeScreen();
             },
+            routes: <RouteBase>[
+              // Admin Screen
+              GoRoute(
+                path: 'allCategories',
+                builder: (context, state) {
+                  return const AllCategoriesScreen();
+                },
+                routes: <RouteBase>[
+                  // Admin Screen
+                  GoRoute(
+                    path: 'allProducts',
+                    builder: (context, state) {
+                      return const AllProductsScreen();
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

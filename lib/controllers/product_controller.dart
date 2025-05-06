@@ -24,8 +24,12 @@ class ProductController {
 
   static Future<ProductModel?> addProduct(ProductModel productModel) async {
     try {
-      String productID = await DBProduct.addDBProduct(productModel.toJson());
-      return productModel.copy(id: productID);
+      String productID = await DBProduct.addDBProduct(
+        productModel.toJson(),
+      );
+      return productModel.copy(
+        id: productID,
+      );
     } catch (e) {
       debugPrint(' There was an error with adding the Product $e');
       rethrow;
