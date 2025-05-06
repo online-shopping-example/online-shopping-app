@@ -1,41 +1,35 @@
-class CategoryModel {
+class CategoriesModel {
   final String? id;
   final String name;
-  final String imageUrl;
   final List<String>? productIds;
 
-  CategoryModel({
+  CategoriesModel({
     this.id,
     required this.name,
-    this.productIds,
-    required this.imageUrl,
+    required this.productIds,
   });
 
-  CategoryModel copy({
+  CategoriesModel copy({
     String? id,
     String? name,
-    List? productId,
-    String? imageUrl,
+    List? productPath,
   }) =>
-      CategoryModel(
+      CategoriesModel(
         id: id ?? this.id,
         name: name ?? this.name,
         productIds: productIds ?? this.productIds,
-        imageUrl: imageUrl ?? this.imageUrl,
       );
 
-  static CategoryModel fromJson(
+  static CategoriesModel fromJson(
       Map<String, dynamic> json, String categoriesId) {
-    return CategoryModel(
+    return CategoriesModel(
       id: categoriesId,
       name: json['name'],
       productIds: json['productsIds'],
-      imageUrl: json['imageUrl'],
     );
   }
 
   Map<String, dynamic> toJson() => {
         'name': name,
-        'imageUrl': imageUrl,
       };
 }

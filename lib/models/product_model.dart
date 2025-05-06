@@ -15,7 +15,7 @@ class ProductModel {
   final bool isActive;
 
   ProductModel({
-    required this.id,
+    this.id,
     required this.title,
     required this.description,
     required this.quantity,
@@ -83,11 +83,20 @@ class ProductModel {
       price: json['price'],
       description: json['description'],
       company: json['company'],
-      sizes: json['sizes'],
-      colors: json['coors'],
-      isActive: json['isActive'],
+      /*  sizes: json['sizes'],*/
+      sizes: (json['sizes'] as List<dynamic>? ?? [])
+          .map((e) => (e as num).toDouble())
+          .toList(),
+/*      colors: json['coors'],*/
+
+      colors: (json['colors'] as List<dynamic>? ?? [])
+          .map((e) => e == null ? null : Color(e))
+          .toList(),
+/*      isActive: json['isActive'],*/
+      isActive: json['isActive'] ?? false,
       quantity: json['quantity'],
-      images: json['images'],
+      /*   images: json['images'],*/
+      images: List<String>.from(json['images'] ?? []),
       category: json['category'],
       discountedPrice: json['discountedPrice'],
     );
