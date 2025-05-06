@@ -1,6 +1,6 @@
-import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:online_shopping_app/components/error_dialog.dart';
 import 'package:online_shopping_app/components/primary_button_widget.dart';
 import 'package:online_shopping_app/components/primary_text_form_field_widget.dart';
@@ -29,15 +29,40 @@ class AddEditCategoryView extends StatefulWidget {
 class _AddEditCategoryViewState extends State<AddEditCategoryView> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController? _controllerName;
-  TextEditingController? _controllerImageUrl;
-  File? _imageFile;
-  String? _uploadedImageUrl;
-  dynamic remoteFiles;
+
+  final ImagePicker _picker = ImagePicker();
+  String? imageUrl;
+
+  Future<void> pickAndUploadImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      final bytes = (await image.readAsBytes());
+      final String fileName = image.name;
+
+      try {
+        final storageRef =
+            FirebaseStorage.instance.ref().child('uploads/$fileName');
+        await storageRef.putData(bytes);
+        final downloadUrl = await storageRef.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+
+        print("Uploaded Image URL: $downloadUrl");
+      } catch (e) {
+        print("Upload failed: $e");
+      }
+    } else {
+      print("No image selected");
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
-    _controllerImageUrl = TextEditingController();
+
     super.initState();
   }
 
@@ -69,17 +94,18 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
             const SizedBox(
               height: 30.0,
             ),
-            PrimaryTextFormFieldWidget(
-              controller: _controllerImageUrl!,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please loading the Category ImageUrl';
-                }
-                return null;
+            /*      Image.network(imageUrl!),*/
+            ElevatedButton(
+              onPressed: () {
+                pickAndUploadImage();
+                debugPrint('$pickAndUploadImage');
               },
-              labelText: 'Please add the category ImageUrl',
+              child: Text("Pick & Upload Image"),
             ),
-            SizedBox(height: 20.0),
+            if (imageUrl != null) ...[
+              SizedBox(height: 20),
+              Image.network(imageUrl!, height: 150),
+            ],
             const SizedBox(
               height: 20,
             ),
@@ -131,7 +157,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
                       : Container(),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -147,25 +173,20 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
       String? imageUrl;
 
       // Upload the image if present
-      if (remoteFiles != null && remoteFiles!.isNotEmpty) {
-      } else {
-        imageUrl =
-            _controllerImageUrl!.text.trim(); // fallback if manually entered
-      }
 
       if (widget.currentCategory == null) {
         CategoryModel newCategory = CategoryModel(
           name: _controllerName!.text.trim(),
-          /*     imageUrl: _controllerImageUrl!.text.trim(),*/
-          imageUrl: _controllerImageUrl!.text.trim(),
+          imageUrl: imageUrl! ?? '',
         );
         await CategoryController.addCategory(newCategory);
       } else {
         CategoryModel categoryModel = widget.currentCategory!.copy(
           name: _controllerName!.text.trim(),
+          imageUrl: imageUrl ?? widget.currentCategory!.imageUrl,
         );
         widget.currentCategory!.copy(
-          imageUrl: imageUrl!,
+          imageUrl: widget.currentCategory?.id,
         );
         await CategoryController.updateCategory(categoryModel);
       }

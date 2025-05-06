@@ -24,8 +24,9 @@ class CategoryController {
   static Future<CategoryModel?> addCategory(
       CategoryModel categoriesModel) async {
     try {
-      String categoryID =
-          await DBCategory.addDBCategory(categoriesModel.toJson());
+      String categoryID = await DBCategory.addDBCategory(
+        categoriesModel.toJson(),
+      );
       return categoriesModel.copy(id: categoryID);
     } catch (e) {
       debugPrint('There was an error with adding the category $e');
