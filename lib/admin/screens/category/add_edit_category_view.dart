@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:online_shopping_app/components/error_diaglog.dart';
+import 'package:online_shopping_app/components/error_dialog.dart';
 import 'package:online_shopping_app/components/primary_button_widget.dart';
 import 'package:online_shopping_app/components/primary_text_form_field_widget.dart';
-import 'package:online_shopping_app/components/warning_diaglog.dart';
-import 'package:online_shopping_app/models/categories_model.dart';
 import 'package:uiblock/uiblock.dart';
 
+import '../../../components/warning_dialog.dart';
 import '../../../controllers/category_controller.dart';
 import '../../../models/category_model.dart';
 
@@ -160,7 +159,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
           /*     imageUrl: _controllerImageUrl!.text.trim(),*/
           imageUrl: _controllerImageUrl!.text.trim(),
         );
-        await CategoryController.addCategory(newCategory as CategoriesModel);
+        await CategoryController.addCategory(newCategory);
       } else {
         CategoryModel categoryModel = widget.currentCategory!.copy(
           name: _controllerName!.text.trim(),
@@ -168,8 +167,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
         widget.currentCategory!.copy(
           imageUrl: imageUrl!,
         );
-        await CategoryController.updateCategory(
-            categoryModel as CategoriesModel);
+        await CategoryController.updateCategory(categoryModel);
       }
 
       if (!context.mounted) return;
@@ -211,7 +209,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
     try {
       UIBlock.block(context);
 
-      CategoryController.deleteCategory(categoryModel as CategoriesModel);
+      CategoryController.deleteCategory(categoryModel);
 
       if (!context.mounted) return;
       UIBlock.unblock(context);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_shopping_app/admin/screens/category/add_edit_category_view.dart';
 import 'package:online_shopping_app/admin/screens/category/categories_list_view.dart';
 
-import '../../../controllers/category_controller.dart';
+import '../../../controllers/category_controller.dart' show CategoryController;
 import '../../../models/category_model.dart';
 
 class AllCategoriesScreen extends StatefulWidget {
