@@ -27,7 +27,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
       appBar: AppBar(
         title: const Text('Products'),
         actions: [
-          TextButton(onPressed: () {}, child: const Text('productsDetalis')),
+          TextButton(onPressed: () {}, child: const Text('products Det')),
         ],
       ),
       body: _drawBody(),
