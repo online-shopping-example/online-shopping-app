@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:online_shopping_app/database/dp_category.dart';
-import 'package:online_shopping_app/models/category_model.dart';
+
+import '../models/categories_model.dart';
 
 class CategoryController {
   // getting specific category.
-  static Future<CategoryModel?> getCategory(String categoryId) async {
+  static Future<CategoriesModel?> getCategory(String categoryId) async {
     try {
       DocumentSnapshot categoryDoc = await DBCategory.getDBCategory(categoryId);
       if (categoryDoc.exists) {
-        CategoryModel categoriesModel = CategoryModel.fromJson(
+        CategoriesModel categoriesModel = CategoriesModel.fromJson(
             categoryDoc.data() as Map<String, dynamic>, categoryId);
         return categoriesModel;
       }
@@ -21,8 +22,8 @@ class CategoryController {
   }
 
   // adding a new category.
-  static Future<CategoryModel?> addCategory(
-      CategoryModel categoriesModel) async {
+  static Future<CategoriesModel?> addCategory(
+      CategoriesModel categoriesModel) async {
     try {
       String categoryID =
           await DBCategory.addDBCategory(categoriesModel.toJson());
@@ -34,7 +35,7 @@ class CategoryController {
   }
 
 // updating a category.
-  static Future<void> updateCategory(CategoryModel categoriesModel) async {
+  static Future<void> updateCategory(CategoriesModel categoriesModel) async {
     try {
       await DBCategory.updateDBCategory(
           categoriesModel.id!, categoriesModel.toJson());
@@ -45,8 +46,7 @@ class CategoryController {
   }
 
 // deleting a category.
-
-  static Future<void> deleteCategory(CategoryModel categoriesModel) async {
+  static Future<void> deleteCategory(CategoriesModel categoriesModel) async {
     try {
       await DBCategory.deleteDBCategory(categoriesModel.id!);
     } catch (e) {
@@ -56,14 +56,14 @@ class CategoryController {
   }
 
 // getting all categories as Future.
-  static Future<List<CategoryModel>> gettingAllCategories() async {
+  static Future<List<CategoriesModel>> gettingAllCategories() async {
     try {
       List<QueryDocumentSnapshot> allCategoriesQuery =
           await DBCategory.getAllDBCategories();
-      List<CategoryModel> allCategories = [];
+      List<CategoriesModel> allCategories = [];
       for (QueryDocumentSnapshot categoryDoc in allCategoriesQuery) {
         if (categoryDoc.exists) {
-          CategoryModel newCategoriesModel = CategoryModel.fromJson(
+          CategoriesModel newCategoriesModel = CategoriesModel.fromJson(
               categoryDoc.data() as Map<String, dynamic>, categoryDoc.id);
           allCategories.add(newCategoriesModel);
         }
@@ -76,13 +76,13 @@ class CategoryController {
   }
 
   // getting all categories as Stream
-  static Stream<List<CategoryModel>> getAllCategoriesAsStream() {
+  static Stream<List<CategoriesModel>> getAllCategoriesAsStream() {
     Stream<QuerySnapshot> snapShot = DBCategory.getAllDBCategoriesAsStream();
     return snapShot.map((snapShot) {
       try {
-        List<CategoryModel> categories = snapShot.docs.map((doc) {
+        List<CategoriesModel> categories = snapShot.docs.map((doc) {
           Map<String, dynamic> dataOfDoc = doc.data() as Map<String, dynamic>;
-          return CategoryModel.fromJson(dataOfDoc, doc.id);
+          return CategoriesModel.fromJson(dataOfDoc, doc.id);
         }).toList();
         return categories;
       } catch (e) {

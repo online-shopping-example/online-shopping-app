@@ -28,7 +28,8 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    _allCategoriesStream = CategoryController.getAllCategoriesAsStream();
+    _allCategoriesStream = CategoryController.getAllCategoriesAsStream()
+        as Stream<List<CategoryModel>>;
     super.initState();
   }
 
