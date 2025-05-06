@@ -24,10 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
               onPressed: () {
-                context.go('/products');
+                context.go('/AdminHomeScreen');
               },
-              child: const Text('Move to Admin Screen Products'),
-            )
+              child: const Text('Move to Admin Home Screen'),
+            ),
           ],
         ),
       ),
