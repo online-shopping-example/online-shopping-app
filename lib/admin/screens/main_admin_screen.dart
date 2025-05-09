@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AdminHomeScreen extends StatefulWidget {
-  const AdminHomeScreen({super.key});
+class MainAdminScreen extends StatefulWidget {
+  const MainAdminScreen({super.key});
 
   @override
-  State<AdminHomeScreen> createState() => _AdminHomeScreenState();
+  State<MainAdminScreen> createState() => _MainAdminScreenState();
 }
 
-class _AdminHomeScreenState extends State<AdminHomeScreen> {
+class _MainAdminScreenState extends State<MainAdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
