@@ -35,10 +35,14 @@ class CategoryController {
   }
 
 // updating a category.
-  static Future<void> updateCategory(CategoryModel categoriesModel) async {
+  static Future<void> updateCategory(
+    CategoryModel categoriesModel,
+  ) async {
     try {
       await DBCategory.updateDBCategory(
-          categoriesModel.id!, categoriesModel.toJson());
+        categoriesModel.id!,
+        categoriesModel.toJson(),
+      );
     } catch (e) {
       debugPrint('There was an error with updating the category $e');
       rethrow;
@@ -46,9 +50,13 @@ class CategoryController {
   }
 
 // deleting a category.
-  static Future<void> deleteCategory(CategoryModel categoriesModel) async {
+  static Future<void> deleteCategory(
+    String categoryId,
+  ) async {
     try {
-      await DBCategory.deleteDBCategory(categoriesModel.id!);
+      await DBCategory.deleteDBCategory(
+        categoryId,
+      );
     } catch (e) {
       debugPrint('There was an error with deleting the category $e');
       rethrow;

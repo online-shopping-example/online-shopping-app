@@ -33,6 +33,117 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
   final ImagePicker _picker = ImagePicker();
   String? imageUrl;
 
+  @override
+  void initState() {
+    // Setting parameters
+    _controllerName = TextEditingController(text: widget.currentCategory?.name);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Column(
+        children: [
+          _drawButtonsSection(),
+          const SizedBox(
+            height: 40.0,
+          ),
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: 400,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PrimaryTextFormFieldWidget(
+                            controller: _controllerName!,
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the Category name';
+                              }
+                              return null;
+                            },
+                            labelText: 'Please add the category Name',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _drawButtonsSection() {
+    return Row(
+      children: [
+        PrimaryButtonWidget(
+          onPressed: () async {
+            await _cancelView();
+          },
+          buttonText: 'Cancel',
+          textColor: Colors.red,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        widget.currentCategory != null
+            ? PrimaryButtonWidget(
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningDialog(
+                        title: 'Delete Category',
+                        message: 'Do you really want to delete this category?',
+                        firstEventTerm: 'Delete Category',
+                        secondEventTerm: 'Keep Category',
+                        firstEventColor: Colors.red,
+                        secondEventColor: Colors.green,
+                        firstEventFunction: () async {
+                          Navigator.of(context).pop();
+                          await _deleteCategory();
+                        },
+                        secondEventFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                },
+                buttonText: 'Delete Category',
+                textColor: Colors.red,
+              )
+            : Container(),
+        const SizedBox(
+          width: 10.0,
+        ),
+        PrimaryButtonWidget(
+          onPressed: () async {
+            await _addOrEditCategory();
+          },
+          buttonText: 'Save changes',
+          textColor: Colors.green,
+        ),
+      ],
+    );
+  }
+
+// ************************************************** Functions ***************************************************** //
+
+  // Upload Image of the Category
+
   Future<void> pickAndUploadImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -50,198 +161,105 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
           imageUrl = downloadUrl;
         });
 
-        print("Uploaded Image URL: $downloadUrl");
+        debugPrint("Uploaded Image URL: $downloadUrl");
       } catch (e) {
-        print("Upload failed: $e");
+        debugPrint("Upload failed: $e");
       }
     } else {
-      print("No image selected");
+      debugPrint("No image selected");
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.currentCategory != null) {
-      _controllerName ??=
-          TextEditingController(text: widget.currentCategory!.name);
-    } else {
-      _controllerName ??= TextEditingController();
-    }
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PrimaryTextFormFieldWidget(
-              controller: _controllerName!,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the Category name';
-                }
-                return null;
-              },
-              labelText: 'Please add the category name',
-            ),
-            const SizedBox(
-              height: 30.0,
-            ),
-            /*      Image.network(imageUrl!),*/
-            ElevatedButton(
-              onPressed: () {
-                pickAndUploadImage();
-                debugPrint('$pickAndUploadImage');
-              },
-              child: Text("Pick & Upload Image"),
-            ),
-            if (imageUrl != null) ...[
-              SizedBox(height: 20),
-              Image.network(imageUrl!, height: 150),
-            ],
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  PrimaryButtonWidget(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await _addOrEditCategory();
-                      }
-                    },
-                    buttonText: widget.currentCategory != null
-                        ? 'Edit Category'
-                        : 'Add category',
-                    textColor: Colors.green,
-                  ),
-                  const SizedBox(
-                    width: 15.0,
-                  ),
-                  widget.currentCategory != null
-                      ? PrimaryButtonWidget(
-                          onPressed: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (BuildContext contxt) {
-                                return WarningDialog(
-                                  title: 'Delete category',
-                                  message:
-                                      'Do you really want to delete this category ?',
-                                  firstEventTerm: 'Delete Category',
-                                  secondEventTerm: 'Keep Category',
-                                  firstEventFunction: () async {
-                                    Navigator.of(context).pop();
-                                    await _deleteCategory(
-                                        widget.currentCategory!);
-                                  },
-                                  secondEventFunction: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                );
-                              },
-                            );
-                          },
-                          buttonText: 'Delete Category',
-                          textColor: Colors.red,
-                        )
-                      : Container(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-// ************************************************** Functions ***************************************************** //
+  // Adding or Update Category
 
   Future<void> _addOrEditCategory() async {
-    try {
-      UIBlock.block(context);
-
-      String? imageUrl;
-
-      // Upload the image if present
-
-      if (widget.currentCategory == null) {
-        CategoryModel newCategory = CategoryModel(
-          name: _controllerName!.text.trim(),
-          imageUrl: imageUrl! ?? '',
-        );
-        await CategoryController.addCategory(newCategory);
-      } else {
-        CategoryModel categoryModel = widget.currentCategory!.copy(
-          name: _controllerName!.text.trim(),
-          imageUrl: imageUrl ?? widget.currentCategory!.imageUrl,
-        );
-        widget.currentCategory!.copy(
-          imageUrl: widget.currentCategory?.id,
-        );
-        await CategoryController.updateCategory(categoryModel);
-      }
-
-      if (!context.mounted) return;
-      UIBlock.unblock(context);
-    } catch (e) {
-      debugPrint('Error $e');
-
-      if (!context.mounted) return;
-      UIBlock.unblock(context);
-
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ErrorDialog(
-            title: widget.currentCategory == null
-                ? 'Error adding new category'
-                : 'Error updating category',
-            message: widget.currentCategory == null
-                ? 'The category could not be added. The error message was: $e'
-                : 'The category could not be updated. The error message was: $e',
-            firstEventTerm: 'Try Again',
-            secondEventTerm: 'Okay',
-            firstEventFunction: () async {
-              Navigator.of(context).pop();
-            },
-            secondEventFunction: () {
-              Navigator.of(context).pop();
+    if (_formKey.currentState!.validate()) {
+      if (_hasChanges()) {
+        try {
+          UIBlock.block(context);
+          // 1. Creating a school model.
+          CategoryModel categoryModel = CategoryModel(
+            id: widget.currentCategory?.id,
+            name: _controllerName!.text.trim(),
+            imageUrl: '',
+          );
+          // 2. Adding or updating in DB.
+          if (widget.currentCategory == null) // Adding new Category.
+          {
+            await CategoryController.addCategory(categoryModel);
+          } else // Updating an existing Category.
+          {
+            await CategoryController.updateCategory(categoryModel);
+          }
+          UIBlock.unblock(context);
+          // resetting view.
+          widget.resetView();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The Category was added successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } catch (e) {
+          debugPrint('Error: $e');
+          if (!context.mounted) return;
+          UIBlock.unblock(context);
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialog(
+                title: widget.currentCategory == null
+                    ? 'Error adding new Cate'
+                    : 'Error updating school',
+                message: widget.currentCategory == null
+                    ? 'The Category could not be added. The error message was: $e'
+                    : 'The school could not be updated. The error message was: $e',
+                firstEventTerm: 'Try Again',
+                secondEventTerm: 'Okay',
+                firstEventFunction: () async {
+                  Navigator.of(context).pop();
+                  await _addOrEditCategory();
+                },
+                secondEventFunction: () {
+                  Navigator.of(context).pop();
+                },
+              );
             },
           );
-        },
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No Changes have been made'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No enough information for the school has been given.'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
 
   // Delete category
 
-  Future<void> _deleteCategory(CategoryModel categoryModel) async {
-    bool categoryDeleted = false;
+  Future<void> _deleteCategory() async {
     try {
       UIBlock.block(context);
 
-      CategoryController.deleteCategory(categoryModel);
+      CategoryController.deleteCategory(widget.currentCategory!.id!);
 
       if (!context.mounted) return;
       UIBlock.unblock(context);
-      if (categoryDeleted == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('The category was deleted successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('The category was deleted successfully'),
+        backgroundColor: Colors.green,
+      ));
     } catch (e) {
       debugPrint('Error: $e');
       if (!context.mounted) return;
@@ -257,7 +275,7 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
             secondEventTerm: 'Okay',
             firstEventFunction: () async {
               Navigator.of(context).pop();
-              await _deleteCategory(categoryModel);
+              await _deleteCategory();
             },
             secondEventFunction: () {
               Navigator.of(context).pop();
@@ -266,5 +284,50 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
         },
       );
     }
+  }
+
+  Future<void> _cancelView() async {
+    // Checking if there are Changes.
+    if (_hasChanges()) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return WarningDialog(
+            title: 'Save changes',
+            message: 'Do you really want to cancel before saving your changes?',
+            firstEventTerm: 'cancel without saving',
+            secondEventTerm: 'Save changes',
+            firstEventColor: Colors.red,
+            secondEventColor: Colors.green,
+            firstEventFunction: () {
+              Navigator.of(context).pop();
+              // Resenting view
+              widget.resetView();
+            },
+            secondEventFunction: () async {
+              Navigator.of(context).pop();
+              await _addOrEditCategory();
+            },
+          );
+        },
+      );
+    } else {
+      // Resenting view
+      widget.resetView();
+    }
+  }
+
+  bool _hasChanges() {
+    if (widget.currentCategory == null) {
+      if (_controllerName!.text.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } else {
+      if (widget.currentCategory!.name != _controllerName!.text.trim()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

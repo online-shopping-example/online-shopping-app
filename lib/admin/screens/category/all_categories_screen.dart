@@ -135,7 +135,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             });
           },
           onElementTap: (int index) {
-            /*     context.go(
+            /*        context.go(
               '/AddCategory${_allCategories[index].name}/${_allCategories[index].imageUrl}/${_allCategories[index].id}',
             );*/
           },

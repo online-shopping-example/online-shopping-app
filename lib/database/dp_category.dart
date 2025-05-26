@@ -31,7 +31,9 @@ class DBCategory {
 
   // Updating the category in fireStore Database.
   static Future<void> updateDBCategory(
-      String categoryId, Map<String, dynamic> updateToData) async {
+    String categoryId,
+    Map<String, dynamic> updateToData,
+  ) async {
     try {
       await categoriesCollection.doc(categoryId).update(updateToData);
     } catch (e) {
@@ -42,9 +44,11 @@ class DBCategory {
   }
 
   // Deleting the category from fireStore Database.
-  static Future<void> deleteDBCategory(String categoryID) async {
+  static Future<void> deleteDBCategory(
+    String categoryId,
+  ) async {
     try {
-      await categoriesCollection.doc(categoryID).delete();
+      await categoriesCollection.doc(categoryId).delete();
     } catch (e) {
       debugPrint(
           'There was an error with deleting the category from fireStore DataBase $e');
