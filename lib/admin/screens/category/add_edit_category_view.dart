@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,6 +75,11 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
                             },
                             labelText: 'Please add the category Name',
                           ),
+                          SizedBox(height: 20.0),
+                          ElevatedButton(
+                            onPressed: pickAndUploadImage,
+                            child: Text('Add image'),
+                          ),
                         ],
                       ),
                     ),
@@ -145,28 +153,32 @@ class _AddEditCategoryViewState extends State<AddEditCategoryView> {
   // Upload Image of the Category
 
   Future<void> pickAndUploadImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    // Pick file
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (image != null) {
-      final bytes = (await image.readAsBytes());
-      final String fileName = image.name;
+    if (result != null && result.files.single.path != null) {
+      File file = File(result.files.single.path!);
+      String fileName = (file.path);
 
       try {
-        final storageRef =
-            FirebaseStorage.instance.ref().child('uploads/$fileName');
-        await storageRef.putData(bytes);
-        final downloadUrl = await storageRef.getDownloadURL();
+        // Upload to Firebase Storage
+        final ref = FirebaseStorage.instance.ref().child('images/$fileName');
+        await ref.putFile(file);
 
-        setState(() {
-          imageUrl = downloadUrl;
-        });
+        // Get download URL
+        String downloadURL = await ref.getDownloadURL();
+        print('Download URL: $downloadURL');
 
-        debugPrint("Uploaded Image URL: $downloadUrl");
+        // Optional: Save URL to Firestore
+        // await FirebaseFirestore.instance.collection('images').add({
+        //   'url': downloadURL,
+        //   'created_at': FieldValue.serverTimestamp(),
+        // });
       } catch (e) {
-        debugPrint("Upload failed: $e");
+        print('Error uploading file: $e');
       }
     } else {
-      debugPrint("No image selected");
+      print('No file selected.');
     }
   }
 

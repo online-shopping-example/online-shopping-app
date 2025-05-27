@@ -37,10 +37,14 @@ class ProductController {
   }
 
   // updating  Product.
-  static Future<void> updateProduct(ProductModel productsModel) async {
+  static Future<void> updateProduct(
+    ProductModel updateProductsModel,
+  ) async {
     try {
       await DBProduct.updateDBProduct(
-          productsModel.id!, productsModel.toJson());
+        updateProductsModel.id!,
+        updateProductsModel.toJson(),
+      );
     } catch (e) {
       debugPrint('There was an error with updating the Product $e');
       rethrow;
@@ -48,9 +52,11 @@ class ProductController {
   }
 
   // deleting  Product.
-  static Future<void> deleteProduct(ProductModel productsModel) async {
+  static Future<void> deleteProduct(
+    String productId,
+  ) async {
     try {
-      await DBProduct.deleteDBProduct(productsModel.id!);
+      await DBProduct.deleteDBProduct(productId);
     } catch (e) {
       debugPrint('There was an error with deleting the Product $e');
       rethrow;

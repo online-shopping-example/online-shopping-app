@@ -25,7 +25,7 @@ class ProductModel {
     required this.price,
     required this.colors,
     required this.sizes,
-    required this.isActive,
+    this.isActive = true,
     required this.discountedPrice,
   });
 

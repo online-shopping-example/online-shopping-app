@@ -31,7 +31,9 @@ class DBProduct {
 
   // Updating the Product in fireStore Database.
   static Future<void> updateDBProduct(
-      String productId, Map<String, dynamic> updateToData) async {
+    String productId,
+    Map<String, dynamic> updateToData,
+  ) async {
     try {
       await productsCollection.doc(productId).update(updateToData);
     } catch (e) {
@@ -42,9 +44,11 @@ class DBProduct {
   }
 
   // Deleting the Product from fireStore Database.
-  static Future<void> deleteDBProduct(String productID) async {
+  static Future<void> deleteDBProduct(
+    String productId,
+  ) async {
     try {
-      await productsCollection.doc(productID).delete();
+      await productsCollection.doc(productId).delete();
     } catch (e) {
       debugPrint(
           'There was an error with deleting the Product from fireStore DataBase $e');
